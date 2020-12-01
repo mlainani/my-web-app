@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# mkdir -p "$SNAP_COMMON/logs/nginx"
+# chmod 750 "$SNAP_COMMON/logs/nginx"
+
+# touch "$SNAP_COMMON/logs/nginx/access.log"
+# touch "$SNAP_COMMON/logs/nginx/error.log"
+# touch "$SNAP_COMMON/logs/nginx/nginx.pid"
+
+# touch "$SNAP_DATA/foobar"
+
+set -e
+
+exec "$SNAP/sbin/nginx" "-g" "daemon off; error_log /var/snap/kong/common/error.log debug;"
+
+# touch "$SNAP_DATA/current/`date +%b-%d_%H-%M`"

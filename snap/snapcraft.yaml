@@ -1,0 +1,77 @@
+name: kong
+version: '0.1'
+summary: Sample Flask web app
+description: |
+  Sample Flask web app
+
+grade: devel
+confinement: devmode
+base: core18
+
+architectures:
+  - build-on: armhf
+
+apps:
+  nginx:
+    # command: nginx -g 'error_log /var/snap/kong/common/error.log debug;'
+    # stop-command: nginx -s quit
+    command: run-nginx
+    daemon: simple
+    restart-condition: always
+
+parts:
+  nginx:
+    plugin: autotools
+    source: http://nginx.org/download/nginx-1.18.0.tar.gz
+
+    configflags:
+      - --prefix=/snap/kong/current
+      - --http-log-path=/var/snap/kong/common/access.log
+      - --error-log-path=/var/snap/kong/common/error.log
+      - --lock-path=/var/snap/kong/common/nginx.lock
+      - --pid-path=/var/snap/kong/common/nginx.pid
+      - --http-client-body-temp-path=/var/snap/kong/common/body
+      - --http-fastcgi-temp-path=/var/snap/kong/common/fastcgi
+      - --http-proxy-temp-path=/var/snap/kong/common/proxy
+      - --http-scgi-temp-path=/var/snap/kong/common/scgi
+      - --http-uwsgi-temp-path=/var/snap/kong/common/uwsgi
+      - --with-debug
+      - --with-pcre-jit
+      - --with-http_ssl_module
+      - --with-http_stub_status_module
+      - --with-http_realip_module
+      - --with-http_auth_request_module
+      - --with-http_v2_module
+      - --with-http_dav_module
+      - --with-http_slice_module
+      - --with-threads
+      - --with-http_gzip_static_module
+      - --without-http_browser_module
+      - --without-http_geo_module
+      - --without-http_limit_req_module
+      - --without-http_limit_conn_module
+      - --without-http_memcached_module
+      - --without-http_referer_module
+      - --without-http_split_clients_module
+      - --without-http_userid_module
+
+    organize:
+      snap/kong/current/conf: conf 
+      snap/kong/current/sbin: sbin 
+
+    filesets:
+      exclude:
+        - -conf/*.default
+      include:
+        - conf/mime.types
+        - conf/nginx.conf
+        - html/*
+        - sbin/nginx
+    stage:
+      - $include
+    prime:
+      - $include
+
+  nginx-customizations:
+    plugin: dump
+    source: src/nginx/bin
