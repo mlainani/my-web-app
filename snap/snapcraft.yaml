@@ -93,17 +93,13 @@ parts:
     # 10 directories, 18 files
 
     organize:
-      snap/kong/current/conf: conf 
+      snap/kong/current/conf: conf
       snap/kong/current/html: html
-      snap/kong/current/sbin: sbin 
+      snap/kong/current/sbin: sbin
 
     filesets:
-      exclude:
-        - -conf/*.default
       include:
         - conf/mime.types
-        - conf/nginx.conf
-        - html/*
         - sbin/nginx
     stage:
       - $include
@@ -112,4 +108,4 @@ parts:
 
   nginx-customizations:
     plugin: dump
-    source: src/nginx/bin
+    source: src/nginx/
